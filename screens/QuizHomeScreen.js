@@ -25,7 +25,7 @@ const QuizHomeScreen = ({ navigation }) => {
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get("https://opentdb.com/api.php?amount=10");
+      const response = await axios.get("https://opentdb.com/api.php?amount=10&category=11&difficulty=easy&type=multiple");
       const shuffledQuizData = shuffleArray(response.data.results);
       setQuizData(shuffledQuizData);
     } catch (error) {
