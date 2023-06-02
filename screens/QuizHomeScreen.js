@@ -105,15 +105,14 @@ const QuizHomeScreen = ({ navigation }) => {
             color: "#FFFF",
           }}
         >
-          Go to quiz...
+          Are you ready ...
         </Text>
       </View>
     );
   }
 
   const currentQuestionData = quizData[currentQuestion];
-  const { category, question, correct_answer, incorrect_answers } =
-    currentQuestionData;
+  const { question, correct_answer, incorrect_answers } = currentQuestionData;
 
   const allAnswers = [...incorrect_answers, correct_answer];
   const shuffledAnswers = shuffleArray(allAnswers);
