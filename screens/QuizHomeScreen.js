@@ -1,15 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import axios from "axios";
+import Icon from "react-native-vector-icons/FontAwesome";
 
-const QuizHomeScreen = () => {
+Icon.loadFont();
+
+const QuizHomeScreen = ({ navigation }) => {
   const [quizData, setQuizData] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
   useEffect(() => {
     fetchQuizData();
+  }, []);
+
+  useEffect(() => {
+    setStartTime(Date.now());
   }, []);
 
   const fetchQuizData = async () => {
@@ -34,25 +45,48 @@ const QuizHomeScreen = () => {
     return shuffledArray;
   };
 
-  const handleAnswer = (selectedAnswer) => {
+  const handleAnswer = (selectedAnswer, index) => {
     setSelectedAnswer(selectedAnswer);
+    setSelectedAnswerIndex(index);
   };
 
-  const handleCommit = () => {
+  const handleCommit = useCallback(() => {
     const currentQuestionData = quizData[currentQuestion];
-    const isCorrect = selectedAnswer === currentQuestionData.correct_answer;
+    const isCorrect = Array.isArray(currentQuestionData.correct_answer)
+      ? currentQuestionData.correct_answer.includes(selectedAnswer)
+      : currentQuestionData.correct_answer === selectedAnswer;
 
     if (isCorrect) {
-      setScore(score + 1);
+      setCorrectAnswersCount(correctAnswersCount + 1);
     }
 
     if (currentQuestion === quizData.length - 1) {
-      console.log("Final Score:", score);
+      setEndTime(Date.now());
+      const totalTimeInSeconds = Math.floor((endTime - startTime) / 1000);
+      const minutes = Math.floor(totalTimeInSeconds / 60);
+      const seconds = Math.abs(totalTimeInSeconds % 60);
+
+      navigation.navigate("QuizResultScreen", {
+        score: correctAnswersCount,
+        totalTime: `${seconds} seconds`,
+      });
+
+      console.log("Score:", correctAnswersCount);
+      console.log("Total Time:", ` ${seconds} seconds `);
     } else {
       setSelectedAnswer(null);
+      setSelectedAnswerIndex(null);
       setCurrentQuestion(currentQuestion + 1);
     }
-  };
+  }, [
+    currentQuestion,
+    quizData,
+    navigation,
+    correctAnswersCount,
+    selectedAnswer,
+    startTime,
+    endTime,
+  ]);
 
   if (quizData.length === 0) {
     return (
@@ -114,7 +148,7 @@ const QuizHomeScreen = () => {
               lineHeight: 18,
             }}
           >
-            Quesetion {currentQuestion + 1} / {quizData.length}
+            Question {currentQuestion + 1} / {quizData.length}
           </Text>
 
           <Text
@@ -138,31 +172,28 @@ const QuizHomeScreen = () => {
           {allAnswers.map((answer, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => handleAnswer(answer)}
+              onPress={() => handleAnswer(answer, index)}
               style={{}}
             >
               <View
                 style={{
-                  width: 240,
-                  height: 48,
-                  backgroundColor: "#FFFF",
-                  margin: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
                   backgroundColor:
-                    selectedAnswer === answer ? "#dc9aed" : "transparent",
+                    selectedAnswerIndex === index ? "#dc9aed" : "transparent",
                   borderWidth: 2,
                   borderColor: "#A42FC1",
                   borderStyle: "solid",
-                  borderTopLeftRadius: 15,
-                  justifyContent: "center",
-                  paddingLeft: 18,
-                  borderTopRightRadius: 15,
-                  borderBottomRightRadius: 15,
-                  borderBottomLeftRadius: 15,
+                  borderRadius: 15,
+                  paddingHorizontal: 18,
+                  paddingVertical: 12,
+                  marginVertical: 10,
                 }}
               >
                 <Text
                   numberOfLines={1}
                   style={{
+                    flex: 1,
                     fontSize: 16,
                     lineHeight: 26,
                     fontWeight: "500",
@@ -171,6 +202,14 @@ const QuizHomeScreen = () => {
                 >
                   {answer}
                 </Text>
+                {selectedAnswerIndex === index && (
+                  <Icon
+                    name="check"
+                    size={16}
+                    color="#2B262D"
+                    style={{ marginLeft: 10 }}
+                  />
+                )}
               </View>
             </TouchableOpacity>
           ))}

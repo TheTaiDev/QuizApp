@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import axios from "axios";
+import Icon from "react-native-vector-icons/FontAwesome";
 
-const QuizApp = () => {
+Icon.loadFont();
+
+const QuizHomeScreen = ({ navigation }) => {
   const [quizData, setQuizData] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
   useEffect(() => {
     fetchQuizData();
@@ -33,20 +39,35 @@ const QuizApp = () => {
     return shuffledArray;
   };
 
-  const handleAnswer = (selectedAnswer) => {
+  const handleAnswer = (selectedAnswer, index) => {
+    setSelectedAnswer(selectedAnswer);
+    setSelectedAnswerIndex(index);
+  };
+
+  const handleCommit = useCallback(() => {
     const currentQuestionData = quizData[currentQuestion];
-    const isCorrect = selectedAnswer === currentQuestionData.correct_answer;
+    const isCorrect = Array.isArray(currentQuestionData.correct_answer)
+      ? currentQuestionData.correct_answer.includes(selectedAnswer)
+      : currentQuestionData.correct_answer === selectedAnswer;
 
     if (isCorrect) {
-      setScore(score + 1);
+      setCorrectAnswersCount(correctAnswersCount + 1);
     }
 
     if (currentQuestion === quizData.length - 1) {
-      console.log("Final Score:", score);
+      navigation.navigate("QuizResultScreen", { score: correctAnswersCount });
     } else {
+      setSelectedAnswer(null);
+      setSelectedAnswerIndex(null);
       setCurrentQuestion(currentQuestion + 1);
     }
-  };
+  }, [
+    currentQuestion,
+    quizData,
+    navigation,
+    correctAnswersCount,
+    selectedAnswer,
+  ]);
 
   if (quizData.length === 0) {
     return (
@@ -62,26 +83,145 @@ const QuizApp = () => {
 
   const allAnswers = [...incorrect_answers, correct_answer];
   const shuffledAnswers = shuffleArray(allAnswers);
-  const showResult = () => {
-    if (currentQuestion === quizData.length - 1) {
-      return (
-        <View>
-          <Text>Final Score: {score}</Text>
-        </View>
-      );
-    }
-  };
+
   return (
-    <View style={{ marginTop: 50 }}>
-      <Text>Sản phẩm: {category}</Text>
-      <Text>Câu hỏi: {question}</Text>
-      {shuffledAnswers.map((answer, index) => (
-        <TouchableOpacity key={index} onPress={() => handleAnswer(answer)}>
-          <Text>Đáp án: {answer}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: "#FFFF",
+      }}
+    >
+      <View
+        style={{
+          marginTop: 40,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View
+          style={{
+            width: 390,
+            height: 228,
+            backgroundColor: "#bc09e8",
+            borderRadius: 30,
+          }}
+        ></View>
+        <View
+          style={{
+            width: 350,
+            height: 200,
+            backgroundColor: "#FFFFFF",
+            borderRadius: 40,
+            position: "absolute",
+            top: 100,
+            borderWidth: 1.5,
+            borderColor: "#FFF5EE",
+            borderStyle: "solid",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              padding: 40,
+              fontSize: 15,
+              fontWeight: "500",
+              color: "#A42FC1",
+              lineHeight: 18,
+            }}
+          >
+            Question {currentQuestion + 1} / {quizData.length}
+          </Text>
+
+          <Text
+            style={{
+              paddingHorizontal: 20,
+              fontSize: 16,
+              lineHeight: 21,
+              textAlign: "center",
+              fontWeight: "500",
+              color: "#2B262D",
+            }}
+          >
+            {question}
+          </Text>
+        </View>
+        <View
+          style={{
+            marginTop: 150,
+          }}
+        >
+          {allAnswers.map((answer, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleAnswer(answer, index)}
+              style={{}}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  backgroundColor:
+                    selectedAnswerIndex === index ? "#dc9aed" : "transparent",
+                  borderWidth: 2,
+                  borderColor: "#A42FC1",
+                  borderStyle: "solid",
+                  borderRadius: 15,
+                  paddingHorizontal: 18,
+                  paddingVertical: 12,
+                  marginVertical: 10,
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    flex: 1,
+                    fontSize: 16,
+                    lineHeight: 26,
+                    fontWeight: "500",
+                    color: "#2B262D",
+                  }}
+                >
+                  {answer}
+                </Text>
+                {selectedAnswerIndex === index && (
+                  <Icon
+                    name="check"
+                    size={16}
+                    color="#2B262D"
+                    style={{ marginLeft: 10 }}
+                  />
+                )}
+              </View>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            onPress={handleCommit}
+            style={{
+              width: 240,
+              height: 48,
+              marginTop: 20,
+              backgroundColor: "#bc09e8",
+              borderRadius: 30,
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                color: "#FFFF",
+                fontWeight: "500",
+                lineHeight: 24,
+              }}
+            >
+              Next
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
-export default QuizApp;
+export default QuizHomeScreen;
