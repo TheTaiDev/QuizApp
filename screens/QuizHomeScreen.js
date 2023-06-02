@@ -68,7 +68,7 @@ const QuizHomeScreen = ({ navigation }) => {
       navigation.navigate("QuizResultScreen", {
         score: correctAnswersCount,
         totalTime: `${seconds} seconds`,
-        totalQuestions : quizData.length,
+        totalQuestions: quizData.length,
       });
 
       console.log("Score:", correctAnswersCount);
@@ -90,8 +90,23 @@ const QuizHomeScreen = ({ navigation }) => {
 
   if (quizData.length === 0) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#bc09e8",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            color: "#FFFF",
+          }}
+        >
+          Go to quiz...
+        </Text>
       </View>
     );
   }
