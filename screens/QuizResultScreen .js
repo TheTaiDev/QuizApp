@@ -1,8 +1,19 @@
 import React from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
 
 const QuizResultScreen = ({ navigation, route }) => {
   const { score } = route.params;
+  const { totalTime } = route.params;
+  const { totalQuestions } = route.params;
+
+  const renderIcon = () => {
+    if (score > 5) {
+      return <Entypo name="emoji-happy" size={50} color="gray" />;
+    } else {
+      return <Entypo name="emoji-sad" size={50} color="gray" />;
+    }
+  };
 
   return (
     <SafeAreaView
@@ -25,37 +36,52 @@ const QuizResultScreen = ({ navigation, route }) => {
           alignItems: "center",
         }}
       >
-        <Text style={{ fontSize: 24, fontWeight: "bold" }}>Overview</Text>
-        <Text style={{ fontSize: 18, marginTop: 20 }}>Score: {score}</Text>
+        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
+          Overview
+        </Text>
+        {renderIcon()}
         <Text
           style={{
-            fontSize: 18,
-            color: "blue",
-            marginTop: 20,
-            textDecorationLine: "underline",
+            fontSize: 20,
+            lineHeight: 29,
+            color: "black",
+            marginTop: 30,
+            fontWeight: "bold",
           }}
-          onPress={() => navigation.navigate("StartScreen")}
         >
-          Back
+          {score > 5 ? "Congratulations!" : "Completed!"}
         </Text>
+
+        <Text style={{ fontSize: 18, marginTop: 20, color: "gray" }}>
+          {score}/{totalQuestions} correct answer in {totalTime}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("StartScreen")}
+          style={{
+            width: 240,
+            height: 48,
+            marginTop: 120,
+            backgroundColor: "#bc09e8",
+            borderRadius: 30,
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              color: "#FFFF",
+              fontWeight: "500",
+              lineHeight: 24,
+            }}
+          >
+            Play Again
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
 export default QuizResultScreen;
-{
-  /* <Text style={{ fontSize: 24, fontWeight: "bold" }}>Quiz Result</Text>
-      <Text style={{ fontSize: 18, marginTop: 20 }}>Score: {score}</Text>
-      <Text
-        style={{
-          fontSize: 18,
-          color: "blue",
-          marginTop: 20,
-          textDecorationLine: "underline",
-        }}
-        onPress={() => navigation.navigate("StartScreen")}
-      >
-        Back
-      </Text> */
-}

@@ -25,7 +25,7 @@ const QuizHomeScreen = ({ navigation }) => {
 
   const fetchQuizData = async () => {
     try {
-      const response = await axios.get("https://opentdb.com/api.php?amount=5");
+      const response = await axios.get("https://opentdb.com/api.php?amount=10");
       const shuffledQuizData = shuffleArray(response.data.results);
       setQuizData(shuffledQuizData);
     } catch (error) {
@@ -63,12 +63,12 @@ const QuizHomeScreen = ({ navigation }) => {
     if (currentQuestion === quizData.length - 1) {
       setEndTime(Date.now());
       const totalTimeInSeconds = Math.floor((endTime - startTime) / 1000);
-      const minutes = Math.floor(totalTimeInSeconds / 60);
       const seconds = Math.abs(totalTimeInSeconds % 60);
 
       navigation.navigate("QuizResultScreen", {
         score: correctAnswersCount,
         totalTime: `${seconds} seconds`,
+        totalQuestions : quizData.length,
       });
 
       console.log("Score:", correctAnswersCount);
