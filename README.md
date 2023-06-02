@@ -2,6 +2,8 @@
 
 ## DemoApp
 ![Demo](https://github.com/manhthetaipy/QuizApp/blob/main/assets/image/demo.gif)
+
+
 **Quiz App UI Design**
 
 ```react
