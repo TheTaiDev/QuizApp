@@ -1,0 +1,15 @@
+Category (Danh mục): Đại diện cho các danh mục quiz, bao gồm các thuộc tính như Category_ID và Category_Name.
+Quiz (Bài thi): Đại diện cho các bài thi, bao gồm các thuộc tính như Quiz_ID, Quiz_Name, Category_ID (khóa ngoại tham chiếu tới danh mục), và các thông tin khác như mức độ khó.
+Question (Câu hỏi): Đại diện cho các câu hỏi trong một bài thi, bao gồm các thuộc tính như Question_ID, Question_Text, Quiz_ID (khóa ngoại tham chiếu tới bài thi), và các thông tin khác.
+Answer (Câu trả lời): Đại diện cho các câu trả lời cho mỗi câu hỏi, bao gồm các thuộc tính như Answer_ID, Answer_Text, Question_ID (khóa ngoại tham chiếu tới câu hỏi), và thuộc tính IsCorrect để xác định câu trả lời đúng.
+
+
+
+Category (Danh mục): Đại diện cho các danh mục quiz, bao gồm các thuộc tính như Category_ID và Category_Name.
+Quiz (Bài thi): Đại diện cho các bài thi, bao gồm các thuộc tính như Quiz_ID, Quiz_Name, Category_ID (khóa ngoại tham chiếu tới danh mục), và các thông tin khác như mức độ khó.
+Question (Câu hỏi): Đại diện cho các câu hỏi trong một bài thi, bao gồm các thuộc tính như Question_ID, Question_Text, Quiz_ID (khóa ngoại tham chiếu tới bài thi), và các thông tin khác.
+Answer (Câu trả lời): Đại diện cho các câu trả lời cho mỗi câu hỏi, bao gồm các thuộc tính như Answer_ID, Answer_Text, Question_ID (khóa ngoại tham chiếu tới câu hỏi), và thuộc tính IsCorrect để xác định câu trả lời đúng.
+Mối quan hệ (Relationships):
+Mối quan hệ "belongs to" (thuộc về): Một bài thi (Quiz) thuộc về một danh mục (Category). Đây là mối quan hệ một-nhiều (one-to-many) giữa Category và Quiz.
+Mối quan hệ "contains" (chứa): Một bài thi (Quiz) chứa nhiều câu hỏi (Question). Đây là mối quan hệ một-nhiều (one-to-many) giữa Quiz và Question.
+Mối quan hệ "has" (có): Một câu hỏi (Question) có nhiều câu trả lời (Answer). Đây là mối quan hệ một-nhiều (one-to-many) giữa Question và Answer.
