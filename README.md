@@ -1,28 +1,9 @@
 # Quiz App
+
 ## DemoApp
 
-+------------------+        +-----------------+
-|     Category     |        |      Quiz       |
-+------------------+        +-----------------+
-| Category_ID      |        | Quiz_ID         |
-| Category_Name    |        | Quiz_Name       |
-| ...              |        | Category_ID     |
-+------------------+        +-----------------+
+**Quiz App UI Design**
 
-+------------------+        +-----------------+
-|    Question      |        |                 |
-+------------------+        |                 |
-| Question_ID      |        |                 |
-| Question_Text    |        |                 |
-| Quiz_ID          |<-------|                 |
-| ...              |        |                 |
-+------------------+        +-----------------+
-
-+------------------+        +-----------------+
-|    Answer        |        |                 |
-+------------------+        |                 |
-| Answer_ID        |        |                 |
-| Answer_Text      |        |                 |
-| Question_ID      |<-------|                 |
-| IsCorrect        |        |                 |
-+------------------+        +-----------------+
+```react
+https://www.figma.com/file/UZXXJrLrTR5Fx6htJTnKJy/Quiz-App-UI-Design-(Community)?type=design&node-id=10-81&t=VmIiQ0ascKdYRaxI-0
+```
